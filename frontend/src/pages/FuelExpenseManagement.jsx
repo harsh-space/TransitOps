@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Loader2, AlertCircle, RefreshCw, Landmark, Fuel, Calendar, Wrench, Route } from 'lucide-react';
+import CustomDropdown from '../components/CustomDropdown';
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
@@ -429,28 +430,8 @@ export default function FuelExpenseManagement({ token }) {
 
       {/* ── Log Fuel Modal ── */}
       {fuelModalOpen && (
-        <div style={{
-          position: 'fixed',
-          top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(43, 27, 27, 0.4)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          backdropFilter: 'blur(4px)'
-        }}>
-          <div style={{
-            backgroundColor: '#ffffff',
-            border: '1px solid var(--border-color)',
-            borderRadius: '12px',
-            padding: '2rem',
-            width: '100%',
-            maxWidth: '450px',
-            boxShadow: '0 8px 32px rgba(43, 27, 27, 0.15)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.25rem'
-          }}>
+        <div className="modal-overlay">
+          <div className="modal-box" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>Log Fuel Refueling</h3>
               <button 
@@ -471,16 +452,18 @@ export default function FuelExpenseManagement({ token }) {
             <form onSubmit={handleFuelSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div className="form-group">
                 <label>Select Vehicle *</label>
-                <select 
-                  value={fuelForm.vehicle} 
-                  onChange={e => setFuelForm(prev => ({ ...prev, vehicle: e.target.value }))}
-                  required
-                >
-                  <option value="">-- Choose Vehicle --</option>
-                  {vehicles.map(v => (
-                    <option key={v._id} value={v._id}>{v.registrationNumber} ({v.name})</option>
-                  ))}
-                </select>
+                <CustomDropdown
+                  options={[
+                    { value: '', label: '-- Choose Vehicle --' },
+                    ...vehicles.map(v => ({
+                      value: v._id,
+                      label: `${v.registrationNumber} (${v.name})`
+                    }))
+                  ]}
+                  value={fuelForm.vehicle}
+                  onChange={(val) => setFuelForm(prev => ({ ...prev, vehicle: val }))}
+                  width="100%"
+                />
               </div>
 
               <div className="form-group">
@@ -549,28 +532,8 @@ export default function FuelExpenseManagement({ token }) {
 
       {/* ── Add Expense Modal ── */}
       {expenseModalOpen && (
-        <div style={{
-          position: 'fixed',
-          top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(43, 27, 27, 0.4)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          backdropFilter: 'blur(4px)'
-        }}>
-          <div style={{
-            backgroundColor: '#ffffff',
-            border: '1px solid var(--border-color)',
-            borderRadius: '12px',
-            padding: '2rem',
-            width: '100%',
-            maxWidth: '480px',
-            boxShadow: '0 8px 32px rgba(43, 27, 27, 0.15)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.25rem'
-          }}>
+        <div className="modal-overlay">
+          <div className="modal-box" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>Log Operational Expense</h3>
               <button 

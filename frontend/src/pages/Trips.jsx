@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2, Plus, AlertCircle, Play, CheckCircle, XCircle, Info, RefreshCw } from 'lucide-react';
+import CustomDropdown from '../components/CustomDropdown';
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
@@ -509,17 +510,9 @@ export default function Trips({ token }) {
 
       {/* --- CREATE TRIP MODAL --- */}
       {showAddModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0, 0, 0, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
-        }}>
-          <div style={{
-            background: 'white', borderRadius: '8px', border: '1px solid var(--border-color)',
-            width: '100%', maxWidth: '520px', padding: '2rem', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
-          }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
-              Create Transport Trip (Draft)
-            </h3>
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h3>Create Transport Trip (Draft)</h3>
 
             {formError && (
               <div className="error-banner" style={{ padding: '0.75rem', marginBottom: '1rem', fontSize: '0.85rem' }}>
@@ -597,31 +590,33 @@ export default function Trips({ token }) {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.25rem' }}>
                 <div className="form-group">
                   <label>Assign Vehicle (Optional)</label>
-                  <select 
+                  <CustomDropdown
+                    options={[
+                      { value: '', label: '-- Choose Vehicle --' },
+                      ...vehicles.map(v => ({
+                        value: v._id,
+                        label: `${v.registrationNumber} (${v.name}) [${v.status}]`
+                      }))
+                    ]}
                     value={formData.vehicle}
-                    onChange={(e) => setFormData({...formData, vehicle: e.target.value})}
-                  >
-                    <option value="">-- Choose Vehicle --</option>
-                    {vehicles.map(v => (
-                      <option key={v._id} value={v._id}>
-                        {v.registrationNumber} ({v.name}) [{v.status}]
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) => setFormData({...formData, vehicle: val})}
+                    width="100%"
+                  />
                 </div>
                 <div className="form-group">
                   <label>Assign Driver (Optional)</label>
-                  <select 
+                  <CustomDropdown
+                    options={[
+                      { value: '', label: '-- Choose Driver --' },
+                      ...drivers.map(d => ({
+                        value: d._id,
+                        label: `${d.name} [${d.status}]`
+                      }))
+                    ]}
                     value={formData.driver}
-                    onChange={(e) => setFormData({...formData, driver: e.target.value})}
-                  >
-                    <option value="">-- Choose Driver --</option>
-                    {drivers.map(d => (
-                      <option key={d._id} value={d._id}>
-                        {d.name} [{d.status}]
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) => setFormData({...formData, driver: val})}
+                    width="100%"
+                  />
                 </div>
               </div>
 
@@ -664,17 +659,9 @@ export default function Trips({ token }) {
 
       {/* --- COMPLETE TRIP MODAL --- */}
       {showCompleteModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0, 0, 0, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
-        }}>
-          <div style={{
-            background: 'white', borderRadius: '8px', border: '1px solid var(--border-color)',
-            width: '100%', maxWidth: '420px', padding: '2rem', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
-          }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
-              Complete Trip: {selectedTrip?.tripId}
-            </h3>
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h3>Complete Trip: {selectedTrip?.tripId}</h3>
 
             {completeError && (
               <div className="error-banner" style={{ padding: '0.75rem', marginBottom: '1rem', fontSize: '0.85rem' }}>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2, AlertCircle, Wrench, CheckCircle, RefreshCw, ArrowRight, ArrowLeft } from 'lucide-react';
+import CustomDropdown from '../components/CustomDropdown';
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
@@ -239,18 +240,18 @@ export default function Maintenance({ token }) {
           <form onSubmit={handleSubmit}>
             <div className="form-group" style={{ marginBottom: '1rem' }}>
               <label>Select Vehicle *</label>
-              <select 
+              <CustomDropdown
+                options={[
+                  { value: '', label: '-- Choose Active Vehicle --' },
+                  ...vehicles.map(v => ({
+                    value: v._id,
+                    label: `${v.registrationNumber} (${v.name}) - Status: ${v.status}`
+                  }))
+                ]}
                 value={selectedVehicle}
-                onChange={(e) => setSelectedVehicle(e.target.value)}
-                style={{ width: '100%' }}
-              >
-                <option value="">-- Choose Active Vehicle --</option>
-                {vehicles.map(v => (
-                  <option key={v._id} value={v._id}>
-                    {v.registrationNumber} ({v.name}) - Status: {v.status}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => setSelectedVehicle(val)}
+                width="100%"
+              />
             </div>
 
             <div className="form-group" style={{ marginBottom: '1rem' }}>
