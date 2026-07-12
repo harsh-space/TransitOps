@@ -9,6 +9,70 @@ const router = express.Router();
 // GET /api/dashboard/summary
 router.get('/summary', authenticate, async (req, res) => {
   try {
+    if (global.useMock) {
+      const mockStore = require('../mockStore');
+      const allVehicles = mockStore.vehicles;
+      const activeVehicles = allVehicles.filter(v => v.status !== 'Retired').length;
+      const availableVehicles = allVehicles.filter(v => v.status === 'Available').length;
+      const maintenanceVehicles = allVehicles.filter(v => v.status === 'In Shop').length;
+      const onTripVehicles = allVehicles.filter(v => v.status === 'On Trip').length;
+
+      const allTrips = mockStore.trips;
+      const activeTrips = allTrips.filter(t => t.status === 'Dispatched' || t.status === 'On Trip').length;
+      const pendingTrips = allTrips.filter(t => t.status === 'Draft').length;
+
+      const allDrivers = mockStore.drivers;
+      const driversOnDuty = allDrivers.filter(d => d.status === 'Available' || d.status === 'On Trip').length;
+
+      let fleetUtilization = 0;
+      if (activeVehicles > 0) {
+        fleetUtilization = Math.round((onTripVehicles / activeVehicles) * 100);
+      }
+
+      // Sort and format recent trips
+      const sortedTrips = [...allTrips].sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt)).slice(0, 10);
+      const formattedRecentTrips = sortedTrips.map(trip => {
+        const vehicle = allVehicles.find(v => v._id === trip.vehicle);
+        const driver = allDrivers.find(d => d._id === trip.driver);
+        return {
+          id: trip._id,
+          tripId: trip.tripId,
+          source: trip.source,
+          destination: trip.destination,
+          vehicleName: vehicle ? vehicle.name : '--',
+          driverName: driver ? driver.name : '--',
+          status: trip.status,
+          eta: trip.eta || '--',
+          cargoWeightKg: trip.cargoWeightKg,
+          plannedDistanceKm: trip.plannedDistanceKm
+        };
+      });
+
+      const vehicleStatusCounts = {
+        Available: allVehicles.filter(v => v.status === 'Available').length,
+        'On Trip': allVehicles.filter(v => v.status === 'On Trip').length,
+        'In Shop': allVehicles.filter(v => v.status === 'In Shop').length,
+        Retired: allVehicles.filter(v => v.status === 'Retired').length
+      };
+
+      return res.json({
+        success: true,
+        data: {
+          kpis: {
+            activeVehicles,
+            availableVehicles,
+            maintenanceVehicles,
+            activeTrips,
+            pendingTrips,
+            driversOnDuty,
+            fleetUtilization
+          },
+          recentTrips: formattedRecentTrips,
+          vehicleStatusCounts
+        }
+      });
+    }
+
     // 1. Vehicles
     const allVehicles = await Vehicle.find({});
     const activeVehicles = allVehicles.filter(v => v.status !== 'Retired').length;

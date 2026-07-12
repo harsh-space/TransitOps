@@ -8,29 +8,37 @@ const PERMISSIONS = {
     fleet: 'full',
     drivers: 'full',
     trips: 'none',
+    maintenance: 'full',
     fuelExpenses: 'none',
-    analytics: 'full'
+    analytics: 'full',
+    settings: 'full'
   },
   Dispatcher: {
     fleet: 'view',
     drivers: 'none',
     trips: 'full',
+    maintenance: 'none',
     fuelExpenses: 'none',
-    analytics: 'none'
+    analytics: 'none',
+    settings: 'none'
   },
   SafetyOfficer: {
     fleet: 'none',
     drivers: 'full',
     trips: 'view',
+    maintenance: 'none',
     fuelExpenses: 'none',
-    analytics: 'none'
+    analytics: 'none',
+    settings: 'none'
   },
   FinancialAnalyst: {
     fleet: 'view',
     drivers: 'none',
     trips: 'none',
+    maintenance: 'none',
     fuelExpenses: 'full',
-    analytics: 'full'
+    analytics: 'full',
+    settings: 'view'
   }
 };
 
@@ -43,7 +51,12 @@ const authenticate = async (req, res, next) => {
   const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findById(decoded.id);
+    let user;
+    if (global.useMock) {
+      user = require('../mockStore').users.find(u => u._id === decoded.id);
+    } else {
+      user = await User.findById(decoded.id);
+    }
     if (!user) {
       return res.status(401).json({ success: false, error: 'User does not exist.' });
     }

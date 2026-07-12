@@ -14,6 +14,33 @@ router.post('/login', async (req, res) => {
   }
 
   try {
+    if (global.useMock) {
+      const mockStore = require('../mockStore');
+      const user = mockStore.users.find(u => u.email === email.toLowerCase().trim());
+      if (!user || user.passwordHash !== password || user.role !== role) {
+        return res.status(400).json({ success: false, error: 'Invalid credentials.' });
+      }
+
+      // Successful login for mock mode
+      const token = jwt.sign(
+        { id: user._id, email: user.email, role: user.role },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
+      return res.json({
+        success: true,
+        data: {
+          token,
+          user: {
+            id: user._id,
+            email: user.email,
+            role: user.role
+          }
+        }
+      });
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
       // Don't leak details but return standard bad credentials
