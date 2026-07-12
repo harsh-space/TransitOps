@@ -28,7 +28,7 @@ That means:
 | Role | What they do on TransitOps |
 |---|---|
 | **Fleet Manager** | Oversees the fleet lifecycle end-to-end — vehicle onboarding, retirement, maintenance scheduling, and overall operational efficiency. |
-| **Driver** | Creates trips, assigns available vehicles and drivers, and tracks active deliveries through to completion. |
+| **Dispatcher** | Creates trips, assigns available vehicles and drivers, and tracks active deliveries through to completion. |
 | **Safety Officer** | Monitors license validity, driver compliance, and safety scores — the last line of defense before an unsafe driver or vehicle gets dispatched. |
 | **Financial Analyst** | Reviews fuel spend, maintenance costs, and per-vehicle profitability to guide fleet investment decisions. |
 
@@ -129,7 +129,7 @@ Fuel Efficiency, Operational Cost, and Fleet Utilization recompute using the lat
 | Role | Primary View |
 |---|---|
 | **Fleet Manager** | Fleet-wide KPIs — Active/Available Vehicles, Vehicles in Maintenance, Fleet Utilization (%) — plus filters by vehicle type, status, and region. |
-| **Driver** | Trip creation screen and a live view of active/pending trips they are assigned to or dispatching. |
+| **Dispatcher** | Trip creation screen and a live view of active/pending trips they are assigned to or dispatching. |
 | **Safety Officer** | Driver roster with license expiry dates, safety scores, and current status (`Available` / `On Trip` / `Off Duty` / `Suspended`) flagged for compliance risk. |
 | **Financial Analyst** | Reports & Analytics — Fuel Efficiency, Operational Cost, and Vehicle ROI, exportable to CSV. |
 
@@ -250,7 +250,11 @@ npm run dev
 Open `http://localhost:5173` in your browser.
 
 ### 5. Login
-Use the seeded demo credentials for each role (Fleet Manager, Driver, Safety Officer, Financial Analyst) to explore role-specific dashboards.
+Use the seeded demo credentials to explore role-specific dashboards:
+- **Fleet Manager**: `manager@transitops.in` / `password123`
+- **Dispatcher**: `dispatcher@transitops.in` / `password123`
+- **Safety Officer**: `safety@transitops.in` / `password123`
+- **Financial Analyst**: `analyst@transitops.in` / `password123`
 
 ---
 
@@ -261,13 +265,13 @@ A 5-minute walkthrough to demonstrate the complete TransitOps lifecycle:
 **1. Register Assets (Fleet Manager)**
 Log in as Fleet Manager → register a vehicle (`Van-05`, 500 kg capacity) → register a driver (`Alex`) with a valid license.
 
-**2. Attempt an Overloaded Trip (Driver)**
-Log in as Driver → try creating a trip with cargo weight above 500 kg → system blocks it, demonstrating the cargo-capacity rule.
+**2. Attempt an Overloaded Trip (Dispatcher)**
+Log in as Dispatcher → try creating a trip with cargo weight above 500 kg → system blocks it, demonstrating the cargo-capacity rule.
 
-**3. Dispatch a Valid Trip (Driver)**
+**3. Dispatch a Valid Trip (Dispatcher)**
 Create a trip with 450 kg cargo → dispatch it → observe both Vehicle and Driver flip to `On Trip` in real time on the Fleet Manager's dashboard.
 
-**4. Attempt to Reassign a Busy Asset (Driver)**
+**4. Attempt to Reassign a Busy Asset (Dispatcher)**
 Try assigning the same vehicle or driver to a second trip → system blocks it, since both are already `On Trip`.
 
 **5. Complete the Trip and Trigger Maintenance (Fleet Manager)**
