@@ -8,7 +8,7 @@
 ---
 
 > [!IMPORTANT]
-> **Jury & Public Testing Credentials**
+> **Public Testing Credentials**
 >
 > To test the live deployed version, you can log in using any of the following pre-seeded role accounts:
 > * **Fleet Manager**: `manager@transitops.in` (Password: `password123`)
