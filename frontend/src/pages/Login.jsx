@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ShieldAlert, Truck, LayoutDashboard, Route, Users, Coins, ChevronDown, Check } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const ROLES = [
   { Icon: LayoutDashboard, name: 'Fleet Manager',    value: 'FleetManager',    scope: 'Fleet registry & full oversight' },

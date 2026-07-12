@@ -26,7 +26,7 @@ const VEHICLE_REGION_OPTIONS = [
   { value: 'East', label: 'East' }
 ];
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default function Vehicles({ token }) {
   const [vehicles, setVehicles] = useState([]);

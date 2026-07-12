@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Loader2, AlertCircle, Wrench, CheckCircle, RefreshCw, ArrowRight, ArrowLeft } from 'lucide-react';
 import CustomDropdown from '../components/CustomDropdown';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default function Maintenance({ token }) {
   const [logs, setLogs] = useState([]);

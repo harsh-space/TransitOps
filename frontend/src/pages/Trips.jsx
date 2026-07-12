@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Loader2, Plus, AlertCircle, Play, CheckCircle, XCircle, Info, RefreshCw } from 'lucide-react';
 import CustomDropdown from '../components/CustomDropdown';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default function Trips({ token }) {
   const [trips, setTrips] = useState([]);
