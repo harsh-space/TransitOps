@@ -7,6 +7,10 @@ const router = express.Router();
 // GET /api/settings
 router.get('/', async (req, res) => {
   try {
+    if (global.useMock) {
+      return res.json({ success: true, data: require('../mockStore').settings });
+    }
+
     let settings = await Settings.findOne();
     if (!settings) {
       // Create defaults if not found
@@ -35,6 +39,14 @@ router.put('/', authenticate, async (req, res) => {
   const { depotName, currency, distanceUnit } = req.body;
 
   try {
+    if (global.useMock) {
+      const settings = require('../mockStore').settings;
+      if (depotName !== undefined) settings.depotName = depotName;
+      if (currency !== undefined) settings.currency = currency;
+      if (distanceUnit !== undefined) settings.distanceUnit = distanceUnit;
+      return res.json({ success: true, data: settings });
+    }
+
     let settings = await Settings.findOne();
     if (!settings) {
       settings = new Settings();
