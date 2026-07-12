@@ -1,5 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2, Plus, Edit2, Trash2, AlertCircle, AlertTriangle, RefreshCw } from 'lucide-react';
+import CustomDropdown from '../components/CustomDropdown';
+
+const LICENSE_OPTIONS = [
+  { value: 'All', label: 'All' },
+  { value: 'LMV', label: 'LMV' },
+  { value: 'HMV', label: 'HMV' }
+];
+
+const DRIVER_STATUS_OPTIONS = [
+  { value: 'All', label: 'All' },
+  { value: 'Available', label: 'Available' },
+  { value: 'On Trip', label: 'On Trip' },
+  { value: 'Off Duty', label: 'Off Duty' },
+  { value: 'Suspended', label: 'Suspended' }
+];
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
@@ -285,8 +300,7 @@ export default function Drivers({ token }) {
         </div>
       )}
 
-      {/* Filters Row */}
-      <div className="filters-row" style={{ flexWrap: 'wrap', gap: '1rem', backgroundColor: 'var(--bg-secondary)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+      <div className="filters-row" style={{ flexWrap: 'wrap', gap: '1rem', backgroundColor: 'var(--bg-secondary)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-color)', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', flex: '1 1 200px' }}>
           <label style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)' }}>Search</label>
           <input 
@@ -304,32 +318,19 @@ export default function Drivers({ token }) {
           />
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', minWidth: '130px' }}>
-          <label style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)' }}>License Class</label>
-          <select 
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem' }}>
+          <CustomDropdown 
+            label="License Class" 
+            options={LICENSE_OPTIONS} 
             value={filterLicenseCategory} 
-            onChange={(e) => setFilterLicenseCategory(e.target.value)}
-            style={{ padding: '0.5rem', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', fontSize: '0.85rem' }}
-          >
-            <option value="All">All Categories</option>
-            <option value="LMV">LMV (Light Motor Vehicle)</option>
-            <option value="HMV">HMV (Heavy Motor Vehicle)</option>
-          </select>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', minWidth: '130px' }}>
-          <label style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)' }}>Status</label>
-          <select 
+            onChange={setFilterLicenseCategory} 
+          />
+          <CustomDropdown 
+            label="Status" 
+            options={DRIVER_STATUS_OPTIONS} 
             value={filterStatus} 
-            onChange={(e) => setFilterStatus(e.target.value)}
-            style={{ padding: '0.5rem', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', fontSize: '0.85rem' }}
-          >
-            <option value="All">All Statuses</option>
-            <option value="Available">Available</option>
-            <option value="On Trip">On Trip</option>
-            <option value="Off Duty">Off Duty</option>
-            <option value="Suspended">Suspended</option>
-          </select>
+            onChange={setFilterStatus} 
+          />
         </div>
       </div>
 
@@ -458,17 +459,9 @@ export default function Drivers({ token }) {
 
       {/* --- ADD DRIVER MODAL --- */}
       {showAddModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0, 0, 0, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
-        }}>
-          <div style={{
-            background: 'white', borderRadius: '8px', border: '1px solid var(--border-color)',
-            width: '100%', maxWidth: '500px', padding: '2rem', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
-          }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
-              Register Driver Profile
-            </h3>
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h3>Register Driver Profile</h3>
 
             {formError && (
               <div className="error-banner" style={{ padding: '0.75rem', marginBottom: '1rem', fontSize: '0.85rem' }}>
@@ -514,13 +507,12 @@ export default function Drivers({ token }) {
                 </div>
                 <div className="form-group">
                   <label>License Class *</label>
-                  <select 
+                  <CustomDropdown
+                    options={LICENSE_OPTIONS.filter(o => o.value !== 'All')}
                     value={formData.licenseCategory}
-                    onChange={(e) => setFormData({...formData, licenseCategory: e.target.value})}
-                  >
-                    <option value="LMV">LMV (Light Motor Vehicle)</option>
-                    <option value="HMV">HMV (Heavy Motor Vehicle)</option>
-                  </select>
+                    onChange={(val) => setFormData({...formData, licenseCategory: val})}
+                    width="100%"
+                  />
                 </div>
               </div>
 
@@ -586,17 +578,9 @@ export default function Drivers({ token }) {
 
       {/* --- EDIT DRIVER MODAL --- */}
       {showEditModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0, 0, 0, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
-        }}>
-          <div style={{
-            background: 'white', borderRadius: '8px', border: '1px solid var(--border-color)',
-            width: '100%', maxWidth: '500px', padding: '2rem', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
-          }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
-              Edit Driver: {selectedDriver?.name}
-            </h3>
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h3>Edit Driver: {selectedDriver?.name}</h3>
 
             {formError && (
               <div className="error-banner" style={{ padding: '0.75rem', marginBottom: '1rem', fontSize: '0.85rem' }}>
@@ -639,13 +623,12 @@ export default function Drivers({ token }) {
                 </div>
                 <div className="form-group">
                   <label>License Class *</label>
-                  <select 
+                  <CustomDropdown
+                    options={LICENSE_OPTIONS.filter(o => o.value !== 'All')}
                     value={formData.licenseCategory}
-                    onChange={(e) => setFormData({...formData, licenseCategory: e.target.value})}
-                  >
-                    <option value="LMV">LMV (Light Motor Vehicle)</option>
-                    <option value="HMV">HMV (Heavy Motor Vehicle)</option>
-                  </select>
+                    onChange={(val) => setFormData({...formData, licenseCategory: val})}
+                    width="100%"
+                  />
                 </div>
               </div>
 
@@ -684,15 +667,12 @@ export default function Drivers({ token }) {
 
               <div className="form-group" style={{ marginBottom: '1.5rem' }}>
                 <label>Driver Status</label>
-                <select 
+                <CustomDropdown
+                  options={DRIVER_STATUS_OPTIONS.filter(o => o.value !== 'All')}
                   value={formData.status}
-                  onChange={(e) => setFormData({...formData, status: e.target.value})}
-                >
-                  <option value="Available">Available</option>
-                  <option value="On Trip">On Trip</option>
-                  <option value="Off Duty">Off Duty</option>
-                  <option value="Suspended">Suspended</option>
-                </select>
+                  onChange={(val) => setFormData({...formData, status: val})}
+                  width="100%"
+                />
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>

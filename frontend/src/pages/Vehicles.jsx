@@ -1,5 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2, Plus, Edit2, Trash2, AlertCircle, RefreshCw } from 'lucide-react';
+import CustomDropdown from '../components/CustomDropdown';
+
+const VEHICLE_TYPE_OPTIONS = [
+  { value: 'All', label: 'All' },
+  { value: 'Van', label: 'Van' },
+  { value: 'Truck', label: 'Truck' },
+  { value: 'Mini', label: 'Mini' }
+];
+
+const VEHICLE_STATUS_OPTIONS = [
+  { value: 'All', label: 'All' },
+  { value: 'Available', label: 'Available' },
+  { value: 'On Trip', label: 'On Trip' },
+  { value: 'In Shop', label: 'In Shop' },
+  { value: 'Retired', label: 'Retired' }
+];
+
+const VEHICLE_REGION_OPTIONS = [
+  { value: 'All', label: 'All' },
+  { value: 'Bangalore', label: 'Bangalore' },
+  { value: 'North', label: 'North' },
+  { value: 'South', label: 'South' },
+  { value: 'West', label: 'West' },
+  { value: 'East', label: 'East' }
+];
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
@@ -267,7 +292,7 @@ export default function Vehicles({ token }) {
       )}
 
       {/* Filters Row */}
-      <div className="filters-row" style={{ flexWrap: 'wrap', gap: '1rem', backgroundColor: 'var(--bg-secondary)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+      <div className="filters-row" style={{ flexWrap: 'wrap', gap: '1rem', backgroundColor: 'var(--bg-secondary)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-color)', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', flex: '1 1 200px' }}>
           <label style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)' }}>Search</label>
           <input 
@@ -285,49 +310,25 @@ export default function Vehicles({ token }) {
           />
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', minWidth: '120px' }}>
-          <label style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)' }}>Type</label>
-          <select 
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem' }}>
+          <CustomDropdown 
+            label="Type" 
+            options={VEHICLE_TYPE_OPTIONS} 
             value={filterType} 
-            onChange={(e) => setFilterType(e.target.value)}
-            style={{ padding: '0.5rem', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', fontSize: '0.85rem' }}
-          >
-            <option value="All">All Types</option>
-            <option value="Van">Van</option>
-            <option value="Truck">Truck</option>
-            <option value="Mini">Mini</option>
-          </select>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', minWidth: '130px' }}>
-          <label style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)' }}>Status</label>
-          <select 
+            onChange={setFilterType} 
+          />
+          <CustomDropdown 
+            label="Status" 
+            options={VEHICLE_STATUS_OPTIONS} 
             value={filterStatus} 
-            onChange={(e) => setFilterStatus(e.target.value)}
-            style={{ padding: '0.5rem', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', fontSize: '0.85rem' }}
-          >
-            <option value="All">All Statuses</option>
-            <option value="Available">Available</option>
-            <option value="On Trip">On Trip</option>
-            <option value="In Shop">In Shop</option>
-            <option value="Retired">Retired</option>
-          </select>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', minWidth: '120px' }}>
-          <label style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)' }}>Region</label>
-          <select 
+            onChange={setFilterStatus} 
+          />
+          <CustomDropdown 
+            label="Region" 
+            options={VEHICLE_REGION_OPTIONS} 
             value={filterRegion} 
-            onChange={(e) => setFilterRegion(e.target.value)}
-            style={{ padding: '0.5rem', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', fontSize: '0.85rem' }}
-          >
-            <option value="All">All Regions</option>
-            <option value="Bangalore">Bangalore</option>
-            <option value="North">North</option>
-            <option value="South">South</option>
-            <option value="West">West</option>
-            <option value="East">East</option>
-          </select>
+            onChange={setFilterRegion} 
+          />
         </div>
       </div>
 
@@ -400,17 +401,9 @@ export default function Vehicles({ token }) {
 
       {/* --- ADD VEHICLE MODAL --- */}
       {showAddModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0, 0, 0, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
-        }}>
-          <div style={{
-            background: 'white', borderRadius: '8px', border: '1px solid var(--border-color)',
-            width: '100%', maxWidth: '500px', padding: '2rem', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
-          }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
-              Onboard New Vehicle
-            </h3>
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h3>Onboard New Vehicle</h3>
 
             {formError && (
               <div className="error-banner" style={{ padding: '0.75rem', marginBottom: '1rem', fontSize: '0.85rem' }}>
@@ -420,7 +413,7 @@ export default function Vehicles({ token }) {
             )}
 
             <form onSubmit={handleAddSubmit}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+              <div className="modal-form-grid">
                 <div className="form-group">
                   <label>Reg Number *</label>
                   <input 
@@ -443,17 +436,15 @@ export default function Vehicles({ token }) {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+              <div className="modal-form-grid">
                 <div className="form-group">
                   <label>Vehicle Type *</label>
-                  <select 
+                  <CustomDropdown
+                    options={VEHICLE_TYPE_OPTIONS.filter(o => o.value !== 'All')}
                     value={formData.type}
-                    onChange={(e) => setFormData({...formData, type: e.target.value})}
-                  >
-                    <option value="Van">Van</option>
-                    <option value="Truck">Truck</option>
-                    <option value="Mini">Mini</option>
-                  </select>
+                    onChange={(val) => setFormData({...formData, type: val})}
+                    width="100%"
+                  />
                 </div>
                 <div className="form-group">
                   <label>Max Load Capacity (kg) *</label>
@@ -468,7 +459,7 @@ export default function Vehicles({ token }) {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+              <div className="modal-form-grid">
                 <div className="form-group">
                   <label>Current Odometer (km) *</label>
                   <input 
@@ -493,7 +484,7 @@ export default function Vehicles({ token }) {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+              <div className="modal-form-grid">
                 <div className="form-group">
                   <label>Region *</label>
                   <input 
@@ -506,35 +497,18 @@ export default function Vehicles({ token }) {
                 </div>
                 <div className="form-group">
                   <label>Status</label>
-                  <select 
+                  <CustomDropdown
+                    options={VEHICLE_STATUS_OPTIONS.filter(o => o.value !== 'All')}
                     value={formData.status}
-                    onChange={(e) => setFormData({...formData, status: e.target.value})}
-                  >
-                    <option value="Available">Available</option>
-                    <option value="On Trip">On Trip</option>
-                    <option value="In Shop">In Shop</option>
-                    <option value="Retired">Retired</option>
-                  </select>
+                    onChange={(val) => setFormData({...formData, status: val})}
+                    width="100%"
+                  />
                 </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-                <button 
-                  type="button" 
-                  onClick={() => setShowAddModal(false)}
-                  style={{
-                    background: 'var(--bg-secondary)', border: '1px solid var(--border-color)',
-                    padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.9rem'
-                  }}
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit" 
-                  className="btn-primary" 
-                  style={{ width: 'auto', padding: '0.5rem 1.5rem', borderRadius: '6px' }}
-                  disabled={submitting}
-                >
+              <div className="modal-actions">
+                <button type="button" className="btn-cancel" onClick={() => setShowAddModal(false)}>Cancel</button>
+                <button type="submit" className="btn-primary" style={{ width: 'auto', padding: '0.5rem 1.5rem' }} disabled={submitting}>
                   {submitting ? 'Registering...' : 'Register Vehicle'}
                 </button>
               </div>
@@ -545,14 +519,8 @@ export default function Vehicles({ token }) {
 
       {/* --- EDIT VEHICLE MODAL --- */}
       {showEditModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0, 0, 0, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
-        }}>
-          <div style={{
-            background: 'white', borderRadius: '8px', border: '1px solid var(--border-color)',
-            width: '100%', maxWidth: '500px', padding: '2rem', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
-          }}>
+        <div className="modal-overlay">
+          <div className="modal-box">
             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
               Edit Vehicle: {selectedVehicle?.registrationNumber}
             </h3>
@@ -586,17 +554,15 @@ export default function Vehicles({ token }) {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+              <div className="modal-form-grid">
                 <div className="form-group">
                   <label>Vehicle Type *</label>
-                  <select 
+                  <CustomDropdown
+                    options={VEHICLE_TYPE_OPTIONS.filter(o => o.value !== 'All')}
                     value={formData.type}
-                    onChange={(e) => setFormData({...formData, type: e.target.value})}
-                  >
-                    <option value="Van">Van</option>
-                    <option value="Truck">Truck</option>
-                    <option value="Mini">Mini</option>
-                  </select>
+                    onChange={(val) => setFormData({...formData, type: val})}
+                    width="100%"
+                  />
                 </div>
                 <div className="form-group">
                   <label>Max Load Capacity (kg) *</label>
@@ -610,7 +576,7 @@ export default function Vehicles({ token }) {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+              <div className="modal-form-grid">
                 <div className="form-group">
                   <label>Odometer (km) *</label>
                   <input 
@@ -633,7 +599,7 @@ export default function Vehicles({ token }) {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+              <div className="modal-form-grid">
                 <div className="form-group">
                   <label>Region *</label>
                   <input 
@@ -645,15 +611,12 @@ export default function Vehicles({ token }) {
                 </div>
                 <div className="form-group">
                   <label>Status</label>
-                  <select 
+                  <CustomDropdown
+                    options={VEHICLE_STATUS_OPTIONS.filter(o => o.value !== 'All')}
                     value={formData.status}
-                    onChange={(e) => setFormData({...formData, status: e.target.value})}
-                  >
-                    <option value="Available">Available</option>
-                    <option value="On Trip">On Trip</option>
-                    <option value="In Shop">In Shop</option>
-                    <option value="Retired">Retired</option>
-                  </select>
+                    onChange={(val) => setFormData({...formData, status: val})}
+                    width="100%"
+                  />
                 </div>
               </div>
 
