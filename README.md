@@ -10,6 +10,8 @@
 > [!IMPORTANT]
 > **Public Testing Credentials**
 >
+> **Live Deployed Site**: [TransitOps Web App](https://transit-iqk8cmme4-contactharrsh-8109s-projects.vercel.app/)
+>
 > To test the live deployed version, you can log in using any of the following pre-seeded role accounts:
 > * **Fleet Manager**: `manager@transitops.in` (Password: `password123`)
 > * **Dispatcher**: `dispatcher@transitops.in` (Password: `password123`)
