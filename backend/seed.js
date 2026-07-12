@@ -178,7 +178,10 @@ async function seed() {
         cargoWeightKg: 450,
         plannedDistanceKm: 270,
         status: 'Dispatched',
-        eta: '45 min'
+        eta: '45 min',
+        revenue: 0,
+        createdAt: new Date('2026-07-10T10:00:00Z'),
+        updatedAt: new Date('2026-07-10T10:00:00Z')
       },
       {
         tripId: 'TR002',
@@ -191,7 +194,10 @@ async function seed() {
         status: 'Completed',
         eta: '--',
         finalOdometer: 45150,
-        fuelConsumedL: 45
+        fuelConsumedL: 45,
+        revenue: 45000,
+        createdAt: new Date('2026-01-15T08:00:00Z'),
+        updatedAt: new Date('2026-01-15T14:30:00Z')
       },
       {
         tripId: 'TR003',
@@ -202,7 +208,10 @@ async function seed() {
         cargoWeightKg: 800,
         plannedDistanceKm: 140,
         status: 'Dispatched',
-        eta: '1h 10m'
+        eta: '1h 10m',
+        revenue: 0,
+        createdAt: new Date('2026-07-12T09:00:00Z'),
+        updatedAt: new Date('2026-07-12T09:00:00Z')
       },
       {
         tripId: 'TR004',
@@ -213,12 +222,119 @@ async function seed() {
         cargoWeightKg: 300,
         plannedDistanceKm: 130,
         status: 'Draft',
-        eta: 'Awaiting vehicle'
+        eta: 'Awaiting vehicle',
+        revenue: 0,
+        createdAt: new Date('2026-07-12T08:30:00Z'),
+        updatedAt: new Date('2026-07-12T08:30:00Z')
+      },
+      {
+        tripId: 'TR005',
+        source: 'Depot B',
+        destination: 'South Warehouse',
+        vehicle: vehicles['TRK-12']._id,
+        driver: drivers['John']._id,
+        cargoWeightKg: 6000,
+        plannedDistanceKm: 220,
+        status: 'Completed',
+        eta: '--',
+        finalOdometer: 45370,
+        fuelConsumedL: 66,
+        revenue: 65000,
+        createdAt: new Date('2026-02-18T09:00:00Z'),
+        updatedAt: new Date('2026-02-18T16:00:00Z')
+      },
+      {
+        tripId: 'TR006',
+        source: 'Depot A',
+        destination: 'North Warehouse',
+        vehicle: vehicles['VAN-05']._id,
+        driver: drivers['Alex']._id,
+        cargoWeightKg: 400,
+        plannedDistanceKm: 280,
+        status: 'Completed',
+        eta: '--',
+        finalOdometer: 12280,
+        fuelConsumedL: 28,
+        revenue: 35000,
+        createdAt: new Date('2026-03-10T10:00:00Z'),
+        updatedAt: new Date('2026-03-10T17:00:00Z')
+      },
+      {
+        tripId: 'TR007',
+        source: 'Depot A',
+        destination: 'East Hub',
+        vehicle: vehicles['MINI-08']._id,
+        driver: drivers['Priya']._id,
+        cargoWeightKg: 900,
+        plannedDistanceKm: 135,
+        status: 'Completed',
+        eta: '--',
+        finalOdometer: 8135,
+        fuelConsumedL: 15,
+        revenue: 28000,
+        createdAt: new Date('2026-04-05T08:00:00Z'),
+        updatedAt: new Date('2026-04-05T12:00:00Z')
+      },
+      {
+        tripId: 'TR008',
+        source: 'Depot B',
+        destination: 'East Hub',
+        vehicle: vehicles['TRK-12']._id,
+        driver: drivers['John']._id,
+        cargoWeightKg: 7500,
+        plannedDistanceKm: 300,
+        status: 'Completed',
+        eta: '--',
+        finalOdometer: 45670,
+        fuelConsumedL: 90,
+        revenue: 90000,
+        createdAt: new Date('2026-05-20T07:00:00Z'),
+        updatedAt: new Date('2026-05-20T17:00:00Z')
+      },
+      {
+        tripId: 'TR009',
+        source: 'Depot A',
+        destination: 'South Warehouse',
+        vehicle: vehicles['VAN-05']._id,
+        driver: drivers['Alex']._id,
+        cargoWeightKg: 480,
+        plannedDistanceKm: 160,
+        status: 'Completed',
+        eta: '--',
+        finalOdometer: 12440,
+        fuelConsumedL: 18,
+        revenue: 22000,
+        createdAt: new Date('2026-06-25T11:00:00Z'),
+        updatedAt: new Date('2026-06-25T16:00:00Z')
+      },
+      {
+        tripId: 'TR010',
+        source: 'Depot A',
+        destination: 'West Center',
+        vehicle: vehicles['MINI-08']._id,
+        driver: drivers['Priya']._id,
+        cargoWeightKg: 850,
+        plannedDistanceKm: 145,
+        status: 'Completed',
+        eta: '--',
+        finalOdometer: 8280,
+        fuelConsumedL: 16,
+        revenue: 30000,
+        createdAt: new Date('2026-07-02T09:00:00Z'),
+        updatedAt: new Date('2026-07-02T13:00:00Z')
       }
     ];
 
+    const seededTrips = [];
     for (const t of tripsData) {
-      await Trip.create(t);
+      const createdTrip = new Trip(t);
+      // To bypass Mongoose auto-overwriting timestamps on create:
+      if (t.createdAt) {
+        createdTrip.createdAt = t.createdAt;
+        createdTrip.updatedAt = t.updatedAt;
+      }
+      await createdTrip.save();
+      seededTrips.push(createdTrip);
     }
 
     console.log('Seeding Fuel and Expenses for Analytics Verification...');
@@ -226,15 +342,45 @@ async function seed() {
     const fuelLogsData = [
       {
         vehicle: vehicles['VAN-05']._id,
-        date: new Date(),
+        date: new Date('2026-03-09T08:00:00Z'),
         liters: 30,
         cost: 3000
       },
       {
+        vehicle: vehicles['VAN-05']._id,
+        date: new Date('2026-06-24T08:00:00Z'),
+        liters: 20,
+        cost: 2100
+      },
+      {
         vehicle: vehicles['TRK-12']._id,
-        date: new Date(),
-        liters: 100,
-        cost: 10000
+        date: new Date('2026-01-14T08:00:00Z'),
+        liters: 50,
+        cost: 5000
+      },
+      {
+        vehicle: vehicles['TRK-12']._id,
+        date: new Date('2026-02-17T08:00:00Z'),
+        liters: 70,
+        cost: 7200
+      },
+      {
+        vehicle: vehicles['TRK-12']._id,
+        date: new Date('2026-05-19T08:00:00Z'),
+        liters: 95,
+        cost: 9800
+      },
+      {
+        vehicle: vehicles['MINI-08']._id,
+        date: new Date('2026-04-04T08:00:00Z'),
+        liters: 18,
+        cost: 1850
+      },
+      {
+        vehicle: vehicles['MINI-08']._id,
+        date: new Date('2026-07-01T08:00:00Z'),
+        liters: 20,
+        cost: 2100
       }
     ];
     for (const fl of fuelLogsData) {
@@ -247,25 +393,77 @@ async function seed() {
         vehicle: vehicles['MINI-08']._id,
         serviceType: 'Brake Replacement',
         cost: 15000,
-        date: new Date(),
-        status: 'Active'
+        date: new Date('2026-04-10T08:00:00Z'),
+        status: 'Completed'
+      },
+      {
+        vehicle: vehicles['VAN-05']._id,
+        serviceType: 'Oil Change',
+        cost: 3500,
+        date: new Date('2026-05-12T08:00:00Z'),
+        status: 'Completed'
+      },
+      {
+        vehicle: vehicles['TRK-12']._id,
+        serviceType: 'Engine Tuning',
+        cost: 25000,
+        date: new Date('2026-06-01T08:00:00Z'),
+        status: 'Completed'
       }
     ];
+    
+    const seededMaintenanceLogs = [];
     for (const ml of maintenanceLogsData) {
-      await MaintenanceLog.create(ml);
+      const created = await MaintenanceLog.create(ml);
+      seededMaintenanceLogs.push(created);
     }
 
     // Seed expenses
     const expensesData = [
       {
         vehicle: vehicles['VAN-05']._id,
+        trip: seededTrips.find(t => t.tripId === 'TR006')._id,
         tollCost: 500,
-        otherCost: 200
+        otherCost: 200,
+        date: new Date('2026-03-10T12:00:00Z')
       },
       {
         vehicle: vehicles['TRK-12']._id,
+        trip: seededTrips.find(t => t.tripId === 'TR002')._id,
         tollCost: 1500,
-        otherCost: 1000
+        otherCost: 1000,
+        date: new Date('2026-01-15T12:00:00Z')
+      },
+      {
+        vehicle: vehicles['TRK-12']._id,
+        trip: seededTrips.find(t => t.tripId === 'TR008')._id,
+        tollCost: 2000,
+        otherCost: 1500,
+        date: new Date('2026-05-20T12:00:00Z')
+      },
+      {
+        vehicle: vehicles['MINI-08']._id,
+        maintenanceLog: seededMaintenanceLogs[0]._id,
+        maintenanceCostLinked: seededMaintenanceLogs[0].cost,
+        tollCost: 0,
+        otherCost: 300,
+        date: new Date('2026-04-10T12:00:00Z')
+      },
+      {
+        vehicle: vehicles['VAN-05']._id,
+        maintenanceLog: seededMaintenanceLogs[1]._id,
+        maintenanceCostLinked: seededMaintenanceLogs[1].cost,
+        tollCost: 100,
+        otherCost: 0,
+        date: new Date('2026-05-12T12:00:00Z')
+      },
+      {
+        vehicle: vehicles['TRK-12']._id,
+        maintenanceLog: seededMaintenanceLogs[2]._id,
+        maintenanceCostLinked: seededMaintenanceLogs[2].cost,
+        tollCost: 500,
+        otherCost: 500,
+        date: new Date('2026-06-01T12:00:00Z')
       }
     ];
     for (const exp of expensesData) {
