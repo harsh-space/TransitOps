@@ -4,6 +4,10 @@ import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import PageStub from './pages/PageStub';
 import Layout from './components/Layout';
+import Vehicles from './pages/Vehicles';
+import Drivers from './pages/Drivers';
+import Maintenance from './pages/Maintenance';
+import Trips from './pages/Trips';
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('transitops_token') || null);
@@ -59,67 +63,16 @@ export default function App() {
         return <Dashboard token={token} />;
         
       case 'fleet':
-        return (
-          <PageStub 
-            title="Vehicle Registry" 
-            owner="Member B (Fleet Operations)" 
-            description="Onboard vehicles, monitor active mileage (odometers), acquisition metrics, and manage statuses (Available, On Trip, In Shop, Retired)."
-            entities={['Vehicle']}
-            routes={[
-              'GET /vehicles - Get vehicles roster (supports ?availableOnly=true filter)',
-              'POST /vehicles - Onboard new vehicle (enforces unique registration number)',
-              'PUT /vehicles/:id - Update vehicle details & status',
-              'DELETE /vehicles/:id - Decommission vehicle'
-            ]}
-          />
-        );
+        return <Vehicles token={token} />;
 
       case 'drivers':
-        return (
-          <PageStub 
-            title="Drivers & Safety Profiles" 
-            owner="Member B (Fleet Operations)" 
-            description="Manage driver records, track safety percentages, compliance levels, license categories, and license expirations."
-            entities={['Driver']}
-            routes={[
-              'GET /drivers - Get drivers roster (supports ?availableOnly=true filter)',
-              'POST /drivers - Register new driver (enforces unique license number)',
-              'PUT /drivers/:id - Update driver profile & status (Available, On Trip, Off Duty, Suspended)'
-            ]}
-          />
-        );
+        return <Drivers token={token} />;
 
       case 'trips':
-        return (
-          <PageStub 
-            title="Trip Dispatcher" 
-            owner="Member B (Fleet Operations)" 
-            description="Schedule transport operations, track cargo weight constraints, assign drivers/vehicles, and control the trip lifecycle (Draft, Dispatched, Completed, Cancelled)."
-            entities={['Trip', 'Vehicle', 'Driver']}
-            routes={[
-              'GET /trips - List transport trips',
-              'POST /trips - Create new dispatch record (validates cargo capacity & driver/vehicle availability)',
-              'PUT /trips/:id/dispatch - Transition trip to Dispatched (flips asset statuses to On Trip)',
-              'PUT /trips/:id/complete - Transition trip to Completed (records final odometer & fuel, returns assets to Available)',
-              'PUT /trips/:id/cancel - Transition trip to Cancelled (returns assets to Available)'
-            ]}
-          />
-        );
+        return <Trips token={token} />;
 
       case 'maintenance':
-        return (
-          <PageStub 
-            title="Maintenance & Repairs" 
-            owner="Member B (Fleet Operations)" 
-            description="Log repair costs, track active work orders, and trigger automatic status changes (logging active maintenance flips vehicle status to In Shop)."
-            entities={['MaintenanceLog', 'Vehicle']}
-            routes={[
-              'GET /maintenance-logs - Get all service records',
-              'POST /maintenance-logs - Log new maintenance ticket (automatically sets vehicle status to In Shop)',
-              'PUT /maintenance-logs/:id/close - Close service ticket (restores vehicle status to Available, unless Retired)'
-            ]}
-          />
-        );
+        return <Maintenance token={token} />;
 
       case 'fuel':
         return (
