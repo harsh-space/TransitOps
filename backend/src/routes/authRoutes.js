@@ -5,6 +5,13 @@ const { authenticate, JWT_SECRET } = require('../middleware/auth');
 
 const router = express.Router();
 
+// Hardcoded credentials (static user)
+const STATIC_USER = {
+  email: "manager@transitops.in",
+  password: "manager123",   // plain text for demo
+  role: "FleetManager"
+};
+
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
   const { email, password, role } = req.body;
@@ -14,13 +21,33 @@ router.post('/login', async (req, res) => {
   }
 
   try {
+    // 🔹 First check static user
+    if (email === STATIC_USER.email && password === STATIC_USER.password && role === STATIC_USER.role) {
+      const token = jwt.sign(
+        { email: STATIC_USER.email, role: STATIC_USER.role },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
+      return res.json({
+        success: true,
+        data: {
+          token,
+          user: {
+            email: STATIC_USER.email,
+            role: STATIC_USER.role
+          }
+        }
+      });
+    }
+
+    // 🔹 Otherwise check MongoDB user
     const user = await User.findOne({ email });
     if (!user) {
-      // Don't leak details but return standard bad credentials
       return res.status(400).json({ success: false, error: 'Invalid credentials.' });
     }
 
-    // Check if account is currently locked
+    // Check if account is locked
     if (user.lockedUntil && user.lockedUntil > new Date()) {
       const minutesLeft = Math.ceil((user.lockedUntil - new Date()) / 60000);
       return res.status(423).json({
@@ -29,7 +56,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Check password and role match
+    // Verify password and role
     const isPasswordValid = await user.comparePassword(password);
     const isRoleValid = (user.role === role);
 
@@ -46,7 +73,6 @@ router.post('/login', async (req, res) => {
       }
 
       await user.save();
-      
       const attemptsRemaining = 5 - user.failedLoginAttempts;
       return res.status(400).json({
         success: false,
@@ -54,12 +80,11 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Successful login
+    // Successful DB login
     user.failedLoginAttempts = 0;
     user.lockedUntil = null;
     await user.save();
 
-    // Issue JWT
     const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role },
       JWT_SECRET,

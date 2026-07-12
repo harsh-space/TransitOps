@@ -4,11 +4,13 @@ import { ShieldAlert, Truck, LayoutDashboard, Route, Users, Coins, ChevronDown, 
 const API_BASE_URL = 'http://localhost:5000/api';
 
 const ROLES = [
-  { Icon: LayoutDashboard, name: 'Fleet Manager',    value: 'FleetManager',    scope: 'Fleet registry & full oversight' },
-  { Icon: Route,           name: 'Dispatcher',        value: 'Dispatcher',       scope: 'Trip planning & dispatch' },
-  { Icon: Users,           name: 'Safety Officer',    value: 'SafetyOfficer',    scope: 'Driver compliance & profiles' },
-  { Icon: Coins,           name: 'Financial Analyst', value: 'FinancialAnalyst', scope: 'Fuel logs, expenses & ROI' },
+  { Icon: LayoutDashboard, name: 'Fleet Manager', value: 'FleetManager', scope: 'Fleet registry & full oversight' },
+  { Icon: Route, name: 'Dispatcher', value: 'Dispatcher', scope: 'Trip planning & dispatch' },
+  { Icon: Users, name: 'Safety Officer', value: 'SafetyOfficer', scope: 'Driver compliance & profiles' },
+  { Icon: Coins, name: 'Financial Analyst', value: 'FinancialAnalyst', scope: 'Fuel logs, expenses & ROI' },
 ];
+
+
 
 /* ── Custom Role Dropdown ── */
 function RoleDropdown({ value, onChange }) {

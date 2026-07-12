@@ -39,3 +39,8 @@ mongoose.connect(MONGODB_URI)
   .catch((err) => {
     console.error('Database connection error:', err);
   });
+
+app.get('/', (req, res) => {
+  res.send('Backend is running successfully!');
+});
+

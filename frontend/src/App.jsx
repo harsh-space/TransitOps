@@ -6,6 +6,10 @@ import PageStub from './pages/PageStub';
 import Layout from './components/Layout';
 import FuelExpenseManagement from './pages/FuelExpenseManagement';
 import ReportsAnalytics from './pages/ReportsAnalytics';
+import axios from "axios";
+axios.get("http://localhost:5000/api/users")
+  .then(res => console.log(res.data));
+
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('transitops_token') || null);
@@ -59,12 +63,12 @@ export default function App() {
     switch (currentTab) {
       case 'dashboard':
         return <Dashboard token={token} />;
-        
+
       case 'fleet':
         return (
-          <PageStub 
-            title="Vehicle Registry" 
-            owner="Member B (Fleet Operations)" 
+          <PageStub
+            title="Vehicle Registry"
+            owner="Member B (Fleet Operations)"
             description="Onboard vehicles, monitor active mileage (odometers), acquisition metrics, and manage statuses (Available, On Trip, In Shop, Retired)."
             entities={['Vehicle']}
             routes={[
@@ -78,9 +82,9 @@ export default function App() {
 
       case 'drivers':
         return (
-          <PageStub 
-            title="Drivers & Safety Profiles" 
-            owner="Member B (Fleet Operations)" 
+          <PageStub
+            title="Drivers & Safety Profiles"
+            owner="Member B (Fleet Operations)"
             description="Manage driver records, track safety percentages, compliance levels, license categories, and license expirations."
             entities={['Driver']}
             routes={[
@@ -93,9 +97,9 @@ export default function App() {
 
       case 'trips':
         return (
-          <PageStub 
-            title="Trip Dispatcher" 
-            owner="Member B (Fleet Operations)" 
+          <PageStub
+            title="Trip Dispatcher"
+            owner="Member B (Fleet Operations)"
             description="Schedule transport operations, track cargo weight constraints, assign drivers/vehicles, and control the trip lifecycle (Draft, Dispatched, Completed, Cancelled)."
             entities={['Trip', 'Vehicle', 'Driver']}
             routes={[
@@ -110,9 +114,9 @@ export default function App() {
 
       case 'maintenance':
         return (
-          <PageStub 
-            title="Maintenance & Repairs" 
-            owner="Member B (Fleet Operations)" 
+          <PageStub
+            title="Maintenance & Repairs"
+            owner="Member B (Fleet Operations)"
             description="Log repair costs, track active work orders, and trigger automatic status changes (logging active maintenance flips vehicle status to In Shop)."
             entities={['MaintenanceLog', 'Vehicle']}
             routes={[
@@ -138,10 +142,10 @@ export default function App() {
   };
 
   return (
-    <Layout 
-      user={user} 
-      currentTab={currentTab} 
-      setCurrentTab={setCurrentTab} 
+    <Layout
+      user={user}
+      currentTab={currentTab}
+      setCurrentTab={setCurrentTab}
       onLogout={handleLogout}
     >
       {renderView()}
