@@ -7,6 +7,17 @@
 
 ---
 
+> [!IMPORTANT]
+> **Jury & Public Testing Credentials**
+>
+> To test the live deployed version, you can log in using any of the following pre-seeded role accounts:
+> * **Fleet Manager**: `manager@transitops.in` (Password: `password123`)
+> * **Dispatcher**: `dispatcher@transitops.in` (Password: `password123`)
+> * **Safety Officer**: `safety@transitops.in` (Password: `password123`)
+> * **Financial Analyst**: `analyst@transitops.in` (Password: `password123`)
+
+---
+
 ## The Problem
 
 Most logistics and fleet operators — from regional trucking companies to last-mile delivery fleets — still run their day-to-day operations on spreadsheets, WhatsApp groups, and paper logbooks.
