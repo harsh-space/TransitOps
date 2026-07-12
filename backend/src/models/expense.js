@@ -23,6 +23,11 @@ const expenseSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  maintenanceLog: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'MaintenanceLog',
+    default: null
+  },
   date: {
     type: Date,
     default: Date.now

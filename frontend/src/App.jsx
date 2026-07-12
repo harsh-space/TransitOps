@@ -4,6 +4,8 @@ import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import PageStub from './pages/PageStub';
 import Layout from './components/Layout';
+import FuelExpenseManagement from './pages/FuelExpenseManagement';
+import ReportsAnalytics from './pages/ReportsAnalytics';
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('transitops_token') || null);
@@ -122,34 +124,10 @@ export default function App() {
         );
 
       case 'fuel':
-        return (
-          <PageStub 
-            title="Fuel & Expense Management" 
-            owner="Member C (Financials)" 
-            description="Log fuel refueling records and trip expenses (tolls, parking, repairs) to compute per-vehicle total operational costs."
-            entities={['FuelLog', 'Expense', 'Trip', 'Vehicle']}
-            routes={[
-              'GET /fuel-logs - List fuel transaction records',
-              'POST /fuel-logs - Log new fuel transaction',
-              'GET /expenses - List operational expenses',
-              'POST /expenses - Log new expense record (linked optionally to a Trip or Maintenance log)'
-            ]}
-          />
-        );
+        return <FuelExpenseManagement token={token} />;
 
       case 'analytics':
-        return (
-          <PageStub 
-            title="Reports & Analytics" 
-            owner="Member C (Financials)" 
-            description="Visualize fleet efficiency (Distance ÷ Fuel), utilization metrics, operational costs roll-up, and vehicle ROI computations with CSV export reports."
-            entities={['Vehicle', 'Trip', 'FuelLog', 'Expense']}
-            routes={[
-              'GET /analytics/summary - Get aggregated operational cost and ROI reports',
-              'GET /analytics/export-csv - Generate and download analytical report as CSV file'
-            ]}
-          />
-        );
+        return <ReportsAnalytics token={token} />;
 
       case 'settings':
         return <Settings token={token} user={user} />;

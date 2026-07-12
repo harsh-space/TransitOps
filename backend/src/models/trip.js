@@ -50,6 +50,10 @@ const tripSchema = new mongoose.Schema({
   fuelConsumedL: {
     type: Number,
     default: null
+  },
+  revenue: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true
